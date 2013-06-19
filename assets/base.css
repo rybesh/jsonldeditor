@@ -1,0 +1,63 @@
+html,
+body {
+}
+
+button {
+}
+
+body {
+}
+
+#subject {
+}
+
+#subject:before {
+}
+
+#subject h1 {
+}
+
+#footer {
+}
+
+#footer:before {
+}
+
+#new-p, #new-o
+.edit p, .edit o {
+}
+
+#new-p, #new-o {
+}
+
+#main {
+}
+
+#statements {
+}
+
+#statements li {
+}
+
+#statements li:last-child {
+}
+
+#statements li .destroy {
+}
+
+#statements li .destroy:hover {
+}
+
+#statements li .destroy:after {
+}
+
+#statements li:hover .destroy {
+}
+
+.hidden{
+	display:none;
+}
+
+hr {
+}
+
