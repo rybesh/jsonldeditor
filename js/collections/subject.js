@@ -6,7 +6,7 @@ var app = app || {};
 	'use strict';
 	app.Subject = Backbone.Collection.extend(
     { model: app.Statement
-    , localStorage: new Backbone.LocalStorage('triplejs-backbone')
+    , localStorage: new Backbone.LocalStorage('triplejs-subject')
     , nextOrder: function () {
 			  if (!this.length) {
 		      return 1

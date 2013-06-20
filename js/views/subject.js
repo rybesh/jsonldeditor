@@ -51,16 +51,17 @@ var app = app || {};
 
     , createOnEnter: function(e) {
         if (e.which !== ENTER_KEY 
-            || !this.$p.val().trim() 
+            || !this.$p.data('uri').trim() 
             || !this.$o.val().trim()) {
           return
         }
         app.subject.create(
-          { p: this.$p.val().trim()
+          { p: this.$p.data('uri').trim()
           , o: this.$o.val().trim()
           , order: app.subject.nextOrder()
           })
         this.$p.val('')
+        this.$p.data('uri', '')
         this.$o.val('')
         this.$p.focus()
       }
