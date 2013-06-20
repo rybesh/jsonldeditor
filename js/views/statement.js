@@ -10,8 +10,7 @@ var app = app || {};
     , template: _.template($('#statement-template').html())
 
 	  , events: 
-      {
-      }
+      { 'click .destroy': 'clear' }
 
 		, initialize: function () {
 			  this.listenTo(this.model, 'destroy', this.remove)
@@ -19,8 +18,6 @@ var app = app || {};
 
     , render: function () {
         this.$el.html(this.template(this.model.toJSON()))
-        this.$p = this.$('.edit input[name="p"]')
-        this.$o = this.$('.edit input[name="o"]')
 		    return this
 		  }
 

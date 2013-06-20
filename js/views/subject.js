@@ -8,6 +8,8 @@ var app = app || {};
 	app.SubjectView = Backbone.View.extend(
     { el: '#subject'
 
+    , infoTemplate: _.template($('#info-template').html())
+
     , events: 
       { 'keypress #new-p': 'createOnEnter'
       , 'keypress #new-o': 'createOnEnter'
@@ -16,12 +18,20 @@ var app = app || {};
     , initialize: function () {
         this.$p = this.$('#new-p')
         this.$o = this.$('#new-o')
+        this.$header = this.$('#header')
         this.$main = this.$('#main')
+
 			  this.listenTo(app.subject, 'add', this.addOne)
         this.listenTo(app.subject, 'reset', this.addAll)
+        this.listenTo(app.subject, 'all', this.render);
+
+        app.subject.fetch()
 		  }
 
     , render: function() {
+        this.$header.html(this.infoTemplate({ s: app.subject.url }))
+        this.$header.show()
+
         if (app.subject.length) {
           this.$main.show()
         } else {
@@ -52,6 +62,7 @@ var app = app || {};
           })
         this.$p.val('')
         this.$o.val('')
+        this.$p.focus()
       }
     })
 

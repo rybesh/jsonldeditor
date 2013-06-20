@@ -8,12 +8,12 @@
 	</head>
 	<body>
     <section id="subject">
-      <h1>edit subject</h1>
+      <header id="header"></header>
       <section id="main">
-        <!-- editing controls go here -->
         <ol id="statements"></ol>
       </section>
       <footer id="footer">
+        add:
         <input id="new-p" placeholder="predicate" autofocus> 
         <input id="new-o" placeholder="object">
       </footer>
@@ -21,12 +21,16 @@
 
     <script type="text/template" id="statement-template">
       <div class="view">
-        <span><%- p %></span> <span><%- o %></span>
-      </div>
-      <div class="edit">
-        <input name="p" value="<%- p %>"> <input name="o" value="<%- o %>">
+        &lt;<span><%- s %></span>&gt; 
+        &lt;<span><%- p %></span>&gt; 
+        &lt;<span><%- o %></span>&gt;
+        <button class="destroy"></button>
       </div>
     </script>
+
+    <script type="text/template" id="info-template">
+      <h1>editing <%- s %></h1>
+  </script>
 
 	  <script src="js/lib/jquery-1.10.1.js"></script>
 	  <script src="js/lib/underscore-1.4.4.js"></script>
