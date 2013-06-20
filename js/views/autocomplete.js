@@ -85,7 +85,7 @@ var app = app || {};
       }
     , onEnter: function () {
         this.$el.children('.active').click()
-        return false
+        return true
       }
     , loadResult: function (model, keyword) {
         this.currentText = keyword

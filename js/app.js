@@ -34,8 +34,28 @@ $(function () {
       }
     ], { validate: true })
 
+  app.objects = new app.Graph(
+    [ { s: 'http://www.wikidata.org/wiki/Q4115712'
+      , p: 'http://www.w3.org/2004/02/skos/core#prefLabel'
+      , o: 'Kaunas'
+      }
+    , { s: 'http://www.wikidata.org/wiki/Q37'
+      , p: 'http://www.w3.org/2004/02/skos/core#prefLabel'
+      , o: 'Lithuania'
+      }
+    , { s: 'http://www.wikidata.org/wiki/Q215627'
+      , p: 'http://www.w3.org/2004/02/skos/core#prefLabel'
+      , o: 'person'
+      }
+    ], { validate: true })
+
   new app.AutoCompleteView(
     { input: $('#new-p')
     , model: app.predicates
+    }).render()
+
+  new app.AutoCompleteView(
+    { input: $('#new-o')
+    , model: app.objects
     }).render()
 })

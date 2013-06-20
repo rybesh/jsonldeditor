@@ -32,6 +32,7 @@ var app = app || {};
         this.$header.html(this.infoTemplate({ s: app.subject.url }))
         this.$header.show()
 
+        this.$p.focusin(_.bind(this.clearInvalidInput, this))
         this.$o.focusin(_.bind(this.clearInvalidInput, this))
 
         if (app.subject.length) {
@@ -47,7 +48,11 @@ var app = app || {};
         if (! this.$p.data('uri')) {
           this.$p.val('')
         }
+        if (! this.$o.data('uri')) {
+          this.$o.val('')
+        }
         this.$p.keyup()
+        this.$o.keyup()
       }
 
 		, addOne: function (triple) {
@@ -63,18 +68,21 @@ var app = app || {};
     , createOnEnter: function(e) {
         if (e.which !== ENTER_KEY
             || !this.$p.data('uri')
-            || !this.$p.data('uri').trim() 
-            || !this.$o.val().trim()) {
+            || !this.$p.data('uri').trim()
+            || !this.$o.data('uri')
+            || !this.$o.data('uri').trim()) {
           return
         }
         app.subject.create(
-          { p: this.$p.data('uri').trim()
-          , o: this.$o.val().trim()
+          { s: app.subject.url
+          , p: this.$p.data('uri').trim()
+          , o: this.$o.data('uri').trim()
           , order: app.subject.nextOrder()
           })
         this.$p.val('')
         this.$p.data('uri', '')
         this.$o.val('')
+        this.$o.data('uri', '')
         this.$p.focus()
       }
     })
