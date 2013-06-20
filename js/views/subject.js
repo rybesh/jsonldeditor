@@ -28,19 +28,30 @@ var app = app || {};
         app.subject.fetch()
 		  }
 
-    , render: function() {
+    , render: function () {
         this.$header.html(this.infoTemplate({ s: app.subject.url }))
         this.$header.show()
+
+        this.$o.focusin(_.bind(this.clearInvalidInput, this))
 
         if (app.subject.length) {
           this.$main.show()
         } else {
           this.$main.hide()
         }
+
+        return this
       }
 
-		, addOne: function (statement) {
-			  var view = new app.StatementView({ model: statement })
+    , clearInvalidInput: function () {
+        if (! this.$p.data('uri')) {
+          this.$p.val('')
+        }
+        this.$p.keyup()
+      }
+
+		, addOne: function (triple) {
+			  var view = new app.StatementView({ model: triple })
 			  $('#statements').append(view.render().el)
 		  }
 
@@ -50,7 +61,8 @@ var app = app || {};
 		  }
 
     , createOnEnter: function(e) {
-        if (e.which !== ENTER_KEY 
+        if (e.which !== ENTER_KEY
+            || !this.$p.data('uri')
             || !this.$p.data('uri').trim() 
             || !this.$o.val().trim()) {
           return

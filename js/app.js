@@ -7,7 +7,7 @@ var ENTER_KEY = 13
 $(function () {
 	'use strict';
 
-  app.predicates = new app.Predicates(
+  app.predicates = new app.Graph(
     [ { s: 'http://www.w3.org/2004/02/skos/core#prefLabel'
       , p: 'http://www.w3.org/2004/02/skos/core#prefLabel'
       , o: 'preferred label'
@@ -33,8 +33,6 @@ $(function () {
       , o: 'ISO 3166-1 alpha-3 country code'
       }
     ], { validate: true })
-
-	new app.SubjectView()
 
   new app.AutoCompleteView(
     { input: $('#new-p')

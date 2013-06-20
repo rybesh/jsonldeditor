@@ -7,7 +7,7 @@ var app = app || {};
 
   app.AutoCompleteItemView = Backbone.View.extend(
     { tagName: 'li'
-    , template: _.template('<a href="#"><%= label %></a>')
+    , template: _.template('<a tabindex="-1" href="#"><%= label %></a>')
     , events: { 'click': 'select' }
     , render: function () {
         this.$el.html(this.template({ 'label': this.model.label() }))
