@@ -15,12 +15,13 @@ var app = app || {};
         }
       }
 
+      // Checks for identical triples.
     , get: function(obj) {
         if (obj == null) { return void 0; }
         if (obj instanceof app.Triple) {
           var matches = this.triples(obj)
           if (matches.length === 1) {
-            return matches.at(0)
+            return matches[0]
           }
         }
         return this._byId[obj.id != null ? obj.id : obj.cid || obj];
@@ -28,17 +29,20 @@ var app = app || {};
 
       // Returns triples that match the given triple pattern.
     , triples: function(pattern) {
-        if (!(pattern instanceof app.Triple)) {
+        if (! pattern) {
+           return this
+        }
+        if (! (pattern instanceof app.Triple)) {
           throw new TypeError('pattern must be an app.Triple');
         }        
         return this.filter(function (triple) {
           return (! _.find(['s','p','o'], function (x) {
             // Looking for misses.
-            if (! pattern.get('x')) {
+            if (! pattern.get(x)) {
               // undefined or null means accept anything, i.e. not a miss.
               return false
             }
-            if (triple.get('x') == pattern.get('x')) {
+            if (triple.get(x) == pattern.get(x)) {
               return false
             }
             return true
