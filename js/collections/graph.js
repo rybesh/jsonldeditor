@@ -6,7 +6,7 @@ var app = app || {};
 	'use strict';
 	app.Graph = Backbone.Collection.extend(
     { model: app.Triple
-      // TODO: set namespace from graph URI
+
     , initialize: function() {
         if (this.url) {
           this.localStorage = new Backbone.LocalStorage(this.url)
@@ -49,6 +49,11 @@ var app = app || {};
           }))
         })
       }
+
+    , clear: function () {
+      this.reset()
+      this.localStorage._clear()
+    }
 
     , nextOrder: function () {
 			  if (!this.length) {

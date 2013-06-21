@@ -7,6 +7,20 @@ describe('Graph collection: ', function(){
     })
   })
 
+  describe('when instantiated without a url', function(){
+    it('should use the default store', function(){
+      var g = new app.Graph()
+      expect(g.localStorage.name).toEqual('|default|')
+    })
+  })
+
+  describe('when instantiated with a url', function(){
+    it('should use a store named with that url', function(){
+      var g = new app.Graph(null, {url:'http://example.com/g1'})
+      expect(g.localStorage.name).toEqual('http://example.com/g1')
+    })
+  })
+
   describe('when a null pattern is passed to triples()', function(){
     it('should return all triples', function(){
       var g = new app.Graph()
@@ -14,6 +28,7 @@ describe('Graph collection: ', function(){
       g.create({s:'s1',p:'p2',o:'o2'})
       expect(g.triples(null).length).toBeDefined()
       expect(g.triples(null).length).toEqual(2)
+      g.clear()
     })
   })
 
@@ -32,6 +47,7 @@ describe('Graph collection: ', function(){
       g.create({s:'s1',p:'p2',o:'o2'})
       expect(g.triples(p).length).toBeDefined()
       expect(g.triples(p).length).toEqual(2)
+      g.clear()
     })
   })
 
@@ -40,6 +56,9 @@ describe('Graph collection: ', function(){
       this.g = new app.Graph()
       this.g.create({s:'s1',p:'p1',o:'o1'})
       this.g.create({s:'s1',p:'p2',o:'o2'})
+    })
+    afterEach(function(){
+      this.g.clear()
     })
     describe('and there are no matches, ', function(){
       it('should return an empty set', function(){
@@ -103,6 +122,9 @@ describe('Graph collection: ', function(){
       this.g.create({s:'s1',p:'p1',o:'o1'})
       this.g.create({s:'s1',p:'p2',o:'o2'})
     })
+    afterEach(function(){
+      this.g.clear()
+    })
     describe('and there is a match, ', function(){
       it('should return the matching triple', function(){
         var t = this.g.get(new app.Triple({s:'s1',p:'p2',o:'o2'}))
@@ -134,6 +156,7 @@ describe('Graph collection: ', function(){
       expect(g.length).toEqual(2)
       g.create({s:'s1',p:'p1',o:'o1'})
       expect(g.length).toEqual(2)
+      g.clear()
     })
   })
 
