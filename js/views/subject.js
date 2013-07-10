@@ -69,16 +69,22 @@ var app = app || {};
         if (e.which !== ENTER_KEY
             || !this.$p.data('uri')
             || !this.$p.data('uri').trim()
-            || !this.$o.data('uri')
-            || !this.$o.data('uri').trim()) {
+           ) {
           return
         }
-        app.subject.create(
+        var attrs = 
           { s: app.subject.url
           , p: this.$p.data('uri').trim()
-          , o: this.$o.data('uri').trim()
-          , order: app.subject.nextOrder()
-          })
+          }
+        if (this.$o.data('uri') && this.$o.data('uri').trim()) {
+          attrs.o = this.$o.data('uri').trim()
+        } else {
+          attrs.o = app.parseLiteral(this.$o.val().trim())
+          if (attrs.o === null) { return }
+        }
+        attrs.order = app.subject.nextOrder()
+        var t = app.subject.create(attrs)
+        console.log(t)
         this.$p.val('')
         this.$p.data('uri', '')
         this.$o.val('')

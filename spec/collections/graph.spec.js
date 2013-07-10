@@ -12,12 +12,33 @@ describe('Graph collection: ', function(){
       var g = new app.Graph()
       expect(g.localStorage.name).toEqual('|default|')
     })
+    it('should not have a url', function(){
+      var g = new app.Graph()
+      expect(g.url).not.toBeDefined()
+    })
+    it('created triples should not have urls', function(){
+      var g = new app.Graph()
+      var t = g.create({s:'s1',p:'p1',o:'o1'})
+      expect(function(){ t.url() }).toThrow()
+      g.clear()
+    })
   })
 
   describe('when instantiated with a url', function(){
     it('should use a store named with that url', function(){
       var g = new app.Graph(null, {url:'http://example.com/g1'})
       expect(g.localStorage.name).toEqual('http://example.com/g1')
+    })
+    it('should have a url', function(){
+      var g = new app.Graph(null, {url:'http://example.com/g1'})
+      expect(g.url).toEqual('http://example.com/g1')
+    })
+    it('created triples should have urls', function(){
+      var g = new app.Graph(null, {url:'http://example.com/g1'})
+      var t = g.create({s:'s1',p:'p1',o:'o1'})
+      expect(t.url().indexOf(g.url)).toEqual(0)
+      expect(t.url().length).toBeGreaterThan(g.url.length)
+      g.clear()
     })
   })
 

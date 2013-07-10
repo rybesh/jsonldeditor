@@ -1,0 +1,3 @@
+integrate https://github.com/digitalbazaar/jsonld.js
+
+rematerialize literals correctly when fetching from storage (could do this lazily on access)
