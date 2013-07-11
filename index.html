@@ -7,6 +7,11 @@
 		<link rel="stylesheet" href="assets/base.css">
 	</head>
 	<body>
+    <section>
+      <label> graph <select id="graph-select"></select></label><br>
+      <label>object <select id="object-select"><option>no graph selected yet</option></select></label>
+    </section>
+
     <section id="subject">
       <header id="header"></header>
       <section id="main">
@@ -35,13 +40,22 @@
 	  <script src="js/lib/jquery-1.10.1.js"></script>
 	  <script src="js/lib/underscore-1.4.4.js"></script>
 	  <script src="js/lib/backbone-1.0.0.js"></script>
+    <!--
 	  <script src="js/lib/backbone.localStorage-1.1.5.js"></script>
+    -->
 
-	  <script src="js/models/triple.js"></script>
-	  <script src="js/collections/graph.js"></script>
+	  <script src="js/models/nodeobject.js"></script>
+	  <script src="js/collections/nodeobjects.js"></script>
+
+	  <script src="js/models/graph.js"></script>
+	  <script src="js/collections/graphs.js"></script>
+
+	  <script src="js/views/select.js"></script>
+<!--
 	  <script src="js/views/statement.js"></script>
 	  <script src="js/views/subject.js"></script>
 	  <script src="js/views/autocomplete.js"></script>
+-->
 	  <script src="js/routers/router.js"></script>
 	  <script src="js/app.js"></script>
   </body>
