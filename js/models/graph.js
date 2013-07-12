@@ -25,12 +25,6 @@ var app = app || {};
           return Backbone.Model.url.call(this)          
         }
       }
-    , fetch: function(options) {
-        if (this.nodeobjects)
-          this.nodeobjects.fetch(options)
-        else
-          Backbone.Model.fetch.call(this, options)
-      }
     }
   )
 

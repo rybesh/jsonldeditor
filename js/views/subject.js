@@ -1,4 +1,4 @@
-/*global Backbone, jQuery, _, ENTER_KEY */
+/*global Backbone, _, ENTER_KEY */
 
 var app = app || {};
 
@@ -10,87 +10,36 @@ var app = app || {};
 
     , infoTemplate: _.template($('#info-template').html())
 
-    , events: 
-      { 'keypress #new-p': 'createOnEnter'
-      , 'keypress #new-o': 'createOnEnter'
-      }
+    , propertyTemplate: _.template($('#property-template').html())
 
     , initialize: function () {
-        this.$p = this.$('#new-p')
-        this.$o = this.$('#new-o')
         this.$header = this.$('#header')
-        this.$main = this.$('#main')
+        this.$editor = this.$('#editor')
 
-			  this.listenTo(app.subject, 'add', this.addOne)
-        this.listenTo(app.subject, 'reset', this.addAll)
-        this.listenTo(app.subject, 'all', this.render);
+        this.listenTo(app.subject, 'sync', this.render);
 
-        app.subject.fetch()
+        app.subject.fetch(
+          { reset: true
+          , error: function(model, res, options) { 
+              alert('Failed to fetch '+model.url()
+                    +': '+res.status+' '+res.responseText) 
+            }
+          })
 		  }
 
     , render: function () {
-        this.$header.html(this.infoTemplate({ s: app.subject.url }))
-        this.$header.show()
+        this.$header.html(this.infoTemplate({ s: app.subject.id }))
 
-        this.$p.focusin(_.bind(this.clearInvalidInput, this))
-        this.$o.focusin(_.bind(this.clearInvalidInput, this))
+        this.$editor.html('')
+        _.each(app.subject.attributes, function(value, key){
+            this.$editor.append(this.propertyTemplate({ p:key, o:value }))
+        }, this)
 
-        if (app.subject.length) {
-          this.$main.show()
-        } else {
-          this.$main.hide()
-        }
-
+        this.$el.show()
+        this.$el.css('visibility', 'visible')
+      
         return this
       }
-
-    , clearInvalidInput: function () {
-        if (! this.$p.data('uri')) {
-          this.$p.val('')
-        }
-        if (! this.$o.data('uri')) {
-          this.$o.val('')
-        }
-        this.$p.keyup()
-        this.$o.keyup()
-      }
-
-		, addOne: function (triple) {
-			  var view = new app.StatementView({ model: triple })
-			  $('#statements').append(view.render().el)
-		  }
-
-    , addAll: function () {
-			  this.$('#statements').html('')
-			  app.subject.each(this.addOne, this)
-		  }
-
-    , createOnEnter: function(e) {
-        if (e.which !== ENTER_KEY
-            || !this.$p.data('uri')
-            || !this.$p.data('uri').trim()
-           ) {
-          return
-        }
-        var attrs = 
-          { s: app.subject.url
-          , p: this.$p.data('uri').trim()
-          }
-        if (this.$o.data('uri') && this.$o.data('uri').trim()) {
-          attrs.o = this.$o.data('uri').trim()
-        } else {
-          attrs.o = app.parseLiteral(this.$o.val().trim())
-          if (attrs.o === null) { return }
-        }
-        attrs.order = app.subject.nextOrder()
-        var t = app.subject.create(attrs)
-        console.log(t)
-        this.$p.val('')
-        this.$p.data('uri', '')
-        this.$o.val('')
-        this.$o.data('uri', '')
-        this.$p.focus()
-      }
-    })
-
+    }
+  )
 })(jQuery)
