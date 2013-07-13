@@ -14,7 +14,7 @@ var app = app || {};
 
     , initialize: function () {
         this.$header = this.$('#header')
-        this.$editor = this.$('#editor')
+        this.$fields = this.$('#fields')
 
         this.listenTo(app.subject, 'sync', this.render);
 
@@ -28,11 +28,16 @@ var app = app || {};
 		  }
 
     , render: function () {
-        this.$header.html(this.infoTemplate({ s: app.subject.id }))
 
-        this.$editor.html('')
+        this.$header.html(this.infoTemplate(
+          { g: app.graph.id
+          , s: app.subject.id 
+          }))
+
+        this.$('.property-view').remove()
         _.each(app.subject.attributes, function(value, key){
-            this.$editor.append(this.propertyTemplate({ p:key, o:value }))
+          if (key === '@id' || key === 'url') return
+          this.$fields.append(this.propertyTemplate({ p:key, o:value }))
         }, this)
 
         this.$el.show()

@@ -13,30 +13,20 @@
     </section>
 
     <section id="subject">
-      <header id="header"></header>
-      <section id="main">
-        <form id="editor">
-        </form>
-      </section>
-<!--
-      <footer id="footer">
-        add:
-        <input id="new-p" placeholder="predicate" autofocus> 
-        <input id="new-o" placeholder="object">
-      </footer>
--->
+      <fieldset id="fields">
+        <legend id="header"></legend>
+      </fieldset>
     </section>
 
     <script type="text/template" id="info-template">
       <!-- used in header -->
-      <h1>editing <code><%- s %></code></h1>
+      editing <code><%- s %></code> in graph <code><%- g %></code>
     </script>
 
     <script type="text/template" id="property-template">
       <!-- used in editor -->
-      <div>
-        <label><%- p %> <input value="<%- o %>"></label>
-        <button class="destroy"></button>
+      <div class="property-view">
+        <label><%- p %> <input name="<%- p %>" value="<%- o %>"></label>
       </div>
     </script>
 

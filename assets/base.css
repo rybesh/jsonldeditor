@@ -1,2 +1,13 @@
 #graph-select, #subject-select { visibility: hidden; }
 #subject { display: none; }
+#fields { width: 40em }
+#fields label, #fields input {
+    display: inline-block;
+}
+#fields label {
+    width: 40em;
+    text-align: right;
+}
+#fields input { 
+    width: 48em; 
+}  
