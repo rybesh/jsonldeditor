@@ -18,13 +18,13 @@ var app = app || {};
 
         this.listenTo(app.subject, 'sync', this.render);
 
-        app.subject.fetch(
-          { reset: true
-          , error: function(model, res, options) { 
-              alert('Failed to fetch '+model.url()
-                    +': '+res.status+' '+res.responseText) 
-            }
-          })
+        function on_error(model, res, options) { 
+          alert('Failed to fetch '+model.url()
+                +': '+res.status+' '+res.responseText) 
+        }
+
+        app.subject.fetch({ reset: true , error: on_error })
+        app.graph.context.fetch({ reset: true , error: on_error })
 		  }
 
     , render: function () {

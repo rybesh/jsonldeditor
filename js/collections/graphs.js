@@ -12,8 +12,9 @@ var app = app || {};
         this.scheme = options.scheme || 'http'
         this.host = options.host || 'localhost'
         if (options.port) this.port = options.port
-        this.url = (this.scheme+'://'+this.host
-                    +(this.port ? ':'+this.port : '')+this.url)
+        this.server = (this.scheme+'://'+this.host
+                        +(this.port ? ':'+this.port : ''))
+        this.url = this.server + this.url
       }
     })
    
