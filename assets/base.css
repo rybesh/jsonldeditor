@@ -11,3 +11,6 @@
 #fields input { 
     width: 48em; 
 }  
+#fields select { 
+    width: 48.6em; 
+}  

@@ -10,40 +10,84 @@ var app = app || {};
 
     , infoTemplate: _.template($('#info-template').html())
 
-    , propertyTemplate: _.template($('#property-template').html())
-
     , initialize: function () {
         this.$header = this.$('#header')
         this.$fields = this.$('#fields')
 
         this.listenTo(app.subject, 'sync', this.render);
 
-        function on_error(model, res, options) { 
+        function on_error(model, res, options) {
           alert('Failed to fetch '+model.url()
-                +': '+res.status+' '+res.responseText) 
+                +': '+res.status+' '+res.responseText)
         }
 
-        app.subject.fetch({ reset: true , error: on_error })
-        app.graph.context.fetch({ reset: true , error: on_error })
+        app.subject.fetch({ error: on_error })
 		  }
 
-    , render: function () {
+    , remove: function () {
+        this.$fields.find('label').remove()
+        this.stopListening()
+        return this
+      }
 
-        this.$header.html(this.infoTemplate(
+    , render: function () {
+        var self = this
+
+        self.$header.html(self.infoTemplate(
           { g: app.graph.id
-          , s: app.subject.id 
+          , s: app.subject.id
           }))
 
-        this.$('.property-view').remove()
         _.each(app.subject.attributes, function(value, key){
           if (key === '@id' || key === 'url') return
-          this.$fields.append(this.propertyTemplate({ p:key, o:value }))
-        }, this)
 
-        this.$el.show()
-        this.$el.css('visibility', 'visible')
-      
-        return this
+          app.graph.context.resolve(key, function(err, term, uri_or_obj){
+            if (err) alert(err)
+
+            if (uri_or_obj instanceof Object && '@type' in uri_or_obj) {
+              self.$fields.append(
+                Backbone.$('<label>'+key+' </label>').append(
+                  new app.SelectView(
+                    { placeholder: 'select a value'
+                    , value: 'id'
+                    , label: 'label'
+                    , selected: value
+                    , collection: app.graph.nodeobjects
+                    , filter: function(node) {
+                        return node.get('@type') === uri_or_obj['@type']
+                      }
+                    }).render().el
+                )
+              )
+
+            } else if (term === '@type') {
+              app.graph.context.resolve(value, function(err, term, uri){
+                if (err) alert(err)
+                self.$fields.append(
+                  Backbone.$('<label>'+key+' </label>').append(
+                    new app.SelectView(
+                      { placeholder: 'select a value'
+                      , value: 'id'
+                      , label: 'label'
+                      , selected: uri
+                      , collection: app.types
+                      , reset: true
+                      }).el
+                  )
+                )
+              })
+
+            } else {
+              self.$fields.append(
+                Backbone.$('<label>'+key+' <input name="'+key+'" value="'+value+'"></label>'))
+            }
+          })
+        })
+
+        self.$el.show()
+        self.$el.css('visibility', 'visible')
+
+        return self
       }
     }
   )

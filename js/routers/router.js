@@ -14,13 +14,18 @@ var app = app || {};
 
 //------------------------------------------------------------------------------
          app.graphs = new app.Graphs(null, {port:8080})
-         app.graphs.on('reset', function(){ Backbone.history.start() })
+         app.graphs.on('reset', function(){
+           var types = app.graphs.get('/types')
+           if (types) app.types = types.nodeobjects
+           Backbone.history.start()
+         })
          app.graph_select = new app.SelectView(
            { el: '#graph-select'
            , placeholder: 'select a graph'
            , value: 'id'
            , label: 'id'
            , collection: app.graphs
+           , reset: true
            }).on('change', function(graph_id) {
              this.navigate('g='+graph_id, {trigger:true})
            }, this)
@@ -38,9 +43,10 @@ var app = app || {};
            , value: 'id'
            , label: 'id'
            , collection: app.graph.nodeobjects
-         }).on('change', function(subject_id) { 
-           this.navigate('g='+graph_id+';s='+subject_id, {trigger:true})
-         }, this)
+           , reset: true
+           }).on('change', function(subject_id) {
+             this.navigate('g='+graph_id+';s='+subject_id, {trigger:true})
+           }, this)
        }
 
      , graphchange: function(graph_id) {
@@ -53,7 +59,8 @@ var app = app || {};
              return
            app.subject = app.graph.nodeobjects.get(subject_id)
            app.subject_select.selected = subject_id
-           new app.SubjectView({})
+           if (app.subject_view) app.subject_view.remove()
+           app.subject_view = new app.SubjectView({})
          })
        }
      })
