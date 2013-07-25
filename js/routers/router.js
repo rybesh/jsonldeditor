@@ -25,7 +25,7 @@ var app = app || {};
            , value: 'id'
            , label: 'id'
            , collection: app.graphs
-           , reset: true
+           , fetch: true
            }).on('change', function(graph_id) {
              this.navigate('g='+graph_id, {trigger:true})
            }, this)
@@ -45,7 +45,7 @@ var app = app || {};
            , value: 'id'
            , label: 'id'
            , collection: app.graph.nodeobjects
-           , reset: true
+           , fetch: true
            }).on('change', function(subject_id) {
              this.navigate('g='+app.graph.id+';s='+subject_id, {trigger:true})
            }, this)
