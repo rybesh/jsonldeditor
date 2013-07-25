@@ -48,6 +48,12 @@ var app = app || {};
         }
       }
 
+    , remove: function () {
+        this.$('option').remove()
+        this.stopListening()
+        return this
+      }
+
     , render: function () {
         this.$el.html(
           (this.options.placeholder ? this.template() : '')

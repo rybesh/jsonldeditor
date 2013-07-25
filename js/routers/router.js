@@ -34,9 +34,11 @@ var app = app || {};
      , _change_graph: function(graph_id, callback) {
          if (app.graph && graph_id === app.graph.id)
            return window.setTimeout(function(){ callback(false) }, 0)
+         if (app.subject_view) app.subject_view.remove()
          app.graph = app.graphs.get(graph_id)
          app.graph.nodeobjects.on('reset', function(){ callback(true) })
          app.graph_select.selected = graph_id
+         if (app.subject_select) app.subject_select.remove()
          app.subject_select = new app.SelectView(
            { el: '#subject-select'
            , placeholder: 'select a subject'
@@ -45,7 +47,7 @@ var app = app || {};
            , collection: app.graph.nodeobjects
            , reset: true
            }).on('change', function(subject_id) {
-             this.navigate('g='+graph_id+';s='+subject_id, {trigger:true})
+             this.navigate('g='+app.graph.id+';s='+subject_id, {trigger:true})
            }, this)
        }
 

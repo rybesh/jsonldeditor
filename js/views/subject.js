@@ -25,8 +25,9 @@ var app = app || {};
 		  }
 
     , remove: function () {
-        this.$fields.find('label').remove()
         this.stopListening()
+        this.$fields.find('label').remove()
+        this.$el.hide()
         return this
       }
 
