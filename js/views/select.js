@@ -12,8 +12,7 @@ var app = app || {};
       }
 
     , _onChange: function(e) {
-        this.selected = this.$('option:selected').val()
-        this.trigger('change', this.selected)
+        this.trigger('change', this.selected())
       }
 
     , initialize: function() {
@@ -27,18 +26,17 @@ var app = app || {};
 
         this.items = self.options.items || this.items
         this.filter = self.options.filter || function(x){ return true }
-        this.selected = self.options.selected || null
+        this._selected = self.options.selected || null
 
         this.template = function(o) {
-          var value = _.result(o, value_key)
-          if (value && typeof value === 'object') value = value['@id']
-          if (o) {
-            return ('<option value="'+ value +'">'
-                                     + (_.result(o, label_key) || o.get(label_key)) +'</option>')
-          } else {
+          var value, label
+          if (! o) {
             return '<option>'+ self.options.placeholder +'</option>'
-
           }
+          value = _.result(o, value_key) || o.get(value_key)
+          label = _.result(o, label_key) || o.get(label_key)
+          if (value && typeof value === 'object') value = value['@id']
+          return ('<option value="'+ value +'">'+ label +'</option>')
         }
 
         if (this.collection) {
@@ -80,15 +78,22 @@ var app = app || {};
           return _.filter(_.pairs(this.model.attributes), this.filter)
       }
 
+    , selected: function() {
+        return this.$('option:selected').val()
+      }
+
+    , selectedLabel: function() {
+        return this.$('option:selected').text()
+      }
+
     , render: function () {
         this.$el.html(
           (this.options.placeholder ? this.template() : '')
           + this.items().map(this.template).join(''))
-        if (this.selected)
-          this.$('option[value="'+this.selected+'"]').attr('selected', true)
+        if (this._selected)
+          this.$('option[value="'+this._selected+'"]').attr('selected', true)
         this.$el.show()
         this.$el.css('visibility', 'visible')
-        this.selected = this.$('option:selected').val()
 		    return this
 		  }
     })

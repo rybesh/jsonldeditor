@@ -13,14 +13,10 @@ var app = app || {};
       }
 
     , _addPredicate: function() {
-        var self = this
-        app.graphs.get('/contexts/'+app.subject.get('@type')).context.compact(
-          self.predicate_select.selected,
-          function (err, term, uri_or_obj) {
-            console.log(err, term, uri_or_obj)
-            if (err) alert(err)
-            self._addField(term, uri_or_obj, '')
-          })
+        var term = this.predicate_select.selectedLabel()
+        // Can't just use value because we need the expanded
+        // definition of the term (with @type info), not just the URL.
+        this._addField(term, app.types.context.resolve(term))
       }
 
     , infoTemplate: _.template($('#info-template').html())
@@ -79,7 +75,10 @@ var app = app || {};
                   , value: 'id'
                   , label: 'label'
                   , selected: uri
-                  , collection: app.types
+                  , collection: app.types.nodeobjects
+                  , filter: function(node) {
+                      return (node.get('@type') === 'class')
+                    }
                   , fetch: true
                   }).el
               )
@@ -93,6 +92,37 @@ var app = app || {};
         }
       }
 
+    , _initialize_predicate_select: function() {
+        var self = this
+        self.predicate_select = new app.SelectView(
+          { el: '#predicates'
+          , value: '@id'
+          , label: 'term'
+          , collection: app.types.nodeobjects
+          , filter: function (node) {
+              return node.get('domain') === app.subject.get('@type')
+            }
+          , items: function() {
+              return this.collection.filter(this.filter).map(
+                function(node) {
+                  return {
+                    '@id': app.types.context.resolve(node.get('@id')),
+                    'term': node.get('@id') }
+                }
+              )
+            }
+          , fetch: true
+          })
+      }
+
+    , _add_fields: function() {
+        var self = this
+        _.each(app.subject.attributes, function(value, term){
+          if (term === '@id' || term === 'url') return
+          self._addField(term, app.graph.context.resolve(term), value)
+        })
+      }
+
     , render: function () {
         var self = this
 
@@ -101,24 +131,15 @@ var app = app || {};
           , s: app.subject.id
           }))
 
-        self.predicate_select = new app.SelectView(
-          { el: "#predicates"
-          , value: 1
-          , label: 0
-          , model: app.graphs.get('/contexts/'+app.subject.get('@type')).context
-          , items: function() {
-              return _.filter(_.pairs(this.model.get('@context')), this.filter)
-            }
-          , fetch: true
-          })
+        if (app.types.context.loaded) {
+          self._initialize_predicate_select()
+        } else {
+          self.listenToOnce(
+            app.types.context, 'sync',
+            self._initialize_predicate_select)
+        }
 
-        _.each(app.subject.attributes, function(value, key){
-          if (key === '@id' || key === 'url') return
-          app.graph.context.resolve(key, function(err, term, uri_or_obj){
-            if (err) alert(err)
-            self._addField(term, uri_or_obj, value)
-          })
-        })
+        self._add_fields()
 
         self.$el.show()
         self.$el.css('visibility', 'visible')
