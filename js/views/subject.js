@@ -13,6 +13,7 @@ var app = app || {};
       }
 
     , _addPredicate: function() {
+        console.log('_addPredicate')
         var term = this.predicate_select.selectedLabel()
         // Can't just use value because we need the expanded
         // definition of the term (with @type info), not just the URL.
@@ -100,7 +101,8 @@ var app = app || {};
           , label: 'term'
           , collection: app.types.nodeobjects
           , filter: function (node) {
-              return node.get('domain') === app.subject.get('@type')
+              return (app.subject.get('@type') === node.get('domain') ||
+                      _.contains(app.subject.get('@type'), node.get('domain')))
             }
           , items: function() {
               return this.collection.filter(this.filter).map(
